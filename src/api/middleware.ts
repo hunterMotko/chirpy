@@ -20,12 +20,12 @@ export function middlewareLogResponse(
 export function middlewareMetricsInc(
 	_: Request, __: Response, next: NextFunction,
 ) {
-	config.fileServerHits++;
+	config.api.fileServerHits++;
 	next();
 }
 
 export function errorMiddleWare(
-	err: Error, _: Request, res: Response, next: NextFunction,
+	err: Error, _: Request, res: Response, ____: NextFunction,
 ) {
 	let statusCode = 500
 	let message = "Something went wrong on out end"
