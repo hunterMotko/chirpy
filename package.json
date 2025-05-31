@@ -1,0 +1,28 @@
+{
+	"name": "servers",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"type": "module",
+	"scripts": {
+		"build": "npx tsc",
+		"start": "node dist/index.js",
+		"dev": "npx tsc && node dist/index.js",
+		"generate": "npx drizzle-kit generate",
+		"migrate": "npx drizzle-kit migrate"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"devDependencies": {
+		"@types/express": "^5.0.2",
+		"@types/node": "^22.15.24",
+		"drizzle-kit": "^0.31.1",
+		"typescript": "^5.8.3"
+	},
+	"dependencies": {
+		"drizzle-orm": "^0.44.1",
+		"express": "^5.1.0",
+		"postgres": "^3.4.7"
+	}
+}
