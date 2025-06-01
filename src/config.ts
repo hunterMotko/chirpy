@@ -26,7 +26,7 @@ function envOrThrow(key: string) {
 }
 
 const migrationConfig: MigrationConfig = {
-	migrationsFolder: "./src/db/migrations",
+	migrationsFolder: "./src/db/out",
 };
 
 export const config: Config = {
