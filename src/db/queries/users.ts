@@ -25,3 +25,7 @@ export async function getUserByEmail(email: string) {
 
 	return result
 }
+
+export async function reset() {
+	await db.delete(users)
+}

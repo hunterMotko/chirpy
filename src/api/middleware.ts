@@ -11,7 +11,6 @@ export function middlewareLogResponse(
 		if (statusCode >= 300) {
 			console.log(`[NON-OK] ${req.method} ${req.url}\n - Body: ${JSON.stringify(req.body)} - Status: ${statusCode}`);
 		}
-		console.log(`[OK] ${req.method} ${req.url}\n - Body: ${JSON.stringify(req.body)} - Status: ${statusCode}`);
 	});
 	next();
 }
