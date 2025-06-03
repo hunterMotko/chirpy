@@ -27,7 +27,7 @@ export function errorMiddleWare(
 ) {
 	let statusCode = 500
 	let message = "Something went wrong on out end"
-	console.log("I HIT THE MIDDLEWARE")
+	console.log("I HIT THE MIDDLEWARE", err)
 	if (err instanceof BadRequestError) {
 		statusCode = 400
 		message = err.message
