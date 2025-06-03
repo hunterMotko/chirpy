@@ -15,7 +15,8 @@ import {
 import {
 	handlerAllChirps,
 	handlerChirpById,
-	handlerCreateChirp
+	handlerCreateChirp,
+	handlerDeleteChirpById
 } from "./api/chirps.js";
 import { config } from "./config.js";
 import { handlerReadiness } from "./api/readiness.js";
@@ -60,6 +61,9 @@ app.get("/api/chirps", (req, res, next) => {
 });
 app.get("/api/chirps/:id", (req, res, next) => {
 	Promise.resolve(handlerChirpById(req, res)).catch(next)
+});
+app.delete("/api/chirps/:id", (req, res, next) => {
+	Promise.resolve(handlerDeleteChirpById(req, res)).catch(next)
 });
 app.post("/api/chirps", (req, res, next) => {
 	Promise.resolve(handlerCreateChirp(req, res)).catch(next)

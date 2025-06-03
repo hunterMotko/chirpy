@@ -7,6 +7,7 @@ export async function getChirps() {
 		.select()
 		.from(chirps)
 		.orderBy(asc(chirps.createdAt))
+
 	return result
 }
 
@@ -25,6 +26,15 @@ export async function createChirp(chirp: NewChirp) {
 		.values(chirp)
 		.onConflictDoNothing()
 		.returning();
+
+	return result
+}
+
+export async function deleteChirp(id: string) {
+	const [result] = await db
+		.delete(chirps)
+		.where(eq(chirps.id, id))
+		.returning()
 
 	return result
 }

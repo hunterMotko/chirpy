@@ -3,7 +3,8 @@ import { createUser, updateUser } from "../db/queries/users.js";
 import { getBearerToken, hashPassword, validateJWT } from "../auth.js";
 import { NewUser } from "../db/schema.js";
 import { config } from "../config.js";
-import { hash } from "crypto";
+import { BadRequestError } from "./errors.js";
+import { respondWithJSON } from "./json.js";
 
 export type UserResponse = Omit<NewUser, "hashedPassword">;
 
@@ -14,17 +15,14 @@ export async function handlerCreateUser(req: Request, res: Response) {
 			email === undefined || email === "" ||
 			password === undefined || password === ""
 		) {
-			res.status(400).json({ error: "Email and Password Required" })
+			throw new BadRequestError("Bad Create Request")
 		}
 		const hashedPassword = await hashPassword(password)
-		if (!hashedPassword) {
-			res.status(500).json({ error: "Hash Error" })
-		}
 		let response = await createUser({ email, hashedPassword })
 		if (!response) {
-			res.status(400).json({ error: "Email and Password Required" })
+			throw new BadRequestError("Email and Password Required")
 		}
-		res.status(201).json(response)
+		respondWithJSON(res, 201, response)
 	} catch (err) {
 		throw err;
 
@@ -40,17 +38,13 @@ export async function handlerUpdateUser(req: Request, res: Response) {
 			email === undefined || email === "" ||
 			password === undefined || password === ""
 		) {
-			res.status(400).json({ error: "Email and Password Required" })
+			throw new BadRequestError("Email and Password Required")
 		}
 		const hashedPassword = await hashPassword(password)
-		if (!hashedPassword) {
-			res.status(500).json({ error: "Hash Error" })
-		}
 		let response = await updateUser({
 			id: userId, email, hashedPassword, updatedAt: new Date()
 		})
-		console.log(response)
-		res.status(200).json(response)
+		respondWithJSON(res, 200, response)
 	} catch (err) {
 		throw err
 	}
