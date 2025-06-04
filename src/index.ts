@@ -26,6 +26,7 @@ import {
 	handlerCreateUser,
 	handlerUpdateUser
 } from "./api/users.js";
+import { handlerPolkaWebhooks } from "./api/polka.js";
 
 
 const migrationClient = postgres(config.db.url, { max: 1 });
@@ -67,6 +68,10 @@ app.delete("/api/chirps/:id", (req, res, next) => {
 });
 app.post("/api/chirps", (req, res, next) => {
 	Promise.resolve(handlerCreateChirp(req, res)).catch(next)
+});
+
+app.post("/api/polka/webhooks", (req, res, next) => {
+	Promise.resolve(handlerPolkaWebhooks(req, res)).catch(next)
 });
 
 app.get("/admin/metrics", (req, res, next) => {

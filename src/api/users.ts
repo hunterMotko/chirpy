@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { createUser, updateUser } from "../db/queries/users.js";
+import { createUser, updateUserCreds } from "../db/queries/users.js";
 import { getBearerToken, hashPassword, validateJWT } from "../auth.js";
 import { NewUser } from "../db/schema.js";
 import { config } from "../config.js";
@@ -41,7 +41,7 @@ export async function handlerUpdateUser(req: Request, res: Response) {
 			throw new BadRequestError("Email and Password Required")
 		}
 		const hashedPassword = await hashPassword(password)
-		let response = await updateUser({
+		let response = await updateUserCreds({
 			id: userId, email, hashedPassword, updatedAt: new Date()
 		})
 		respondWithJSON(res, 200, response)

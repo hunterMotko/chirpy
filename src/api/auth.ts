@@ -22,17 +22,12 @@ type LoginResponse = UserResponse & {
 };
 
 export async function handlerLogin(req: Request, res: Response) {
-	type parameters = {
-		password: string;
-		email: string;
-	};
-
+	type parameters = { password: string; email: string; };
 	const params: parameters = req.body;
 	const user = await getUserByEmail(params.email);
 	if (!user) {
 		throw new UnauthorizedError("invalid username or password");
 	}
-
 	const matching = await comparePassword(
 		params.password,
 		user.hashedPassword,
@@ -40,24 +35,22 @@ export async function handlerLogin(req: Request, res: Response) {
 	if (!matching) {
 		throw new UnauthorizedError("invalid username or password");
 	}
-
 	const accessToken = makeJWT(
 		user.id,
 		config.jwt.defaultDuration,
 		config.jwt.secret,
 	);
 	const refreshToken = makeRefreshToken();
-
 	const saved = await saveRefreshToken(user.id, refreshToken);
 	if (!saved) {
 		throw new UnauthorizedError("could not save refresh token");
 	}
-
 	respondWithJSON(res, 200, {
 		id: user.id,
 		email: user.email,
 		createdAt: user.createdAt,
 		updatedAt: user.updatedAt,
+		isChirpyRed: user.isChirpyRed,
 		token: accessToken,
 		refreshToken: refreshToken,
 	} satisfies LoginResponse);
