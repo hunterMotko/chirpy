@@ -5,14 +5,18 @@ import { config } from "../config.js";
 import {
 	BadRequestError,
 	ForbiddenError,
-	NotFoundError,
-	UnauthorizedError
+	NotFoundError
 } from "./errors.js";
 import { respondWithJSON } from "./json.js";
 
 export async function handlerAllChirps(req: Request, res: Response) {
 	try {
-		const result = await getChirps()
+		let orderBy = "";
+		let sortBy = req.query.sort;
+		if (typeof sortBy === "string") {
+			orderBy = sortBy;
+		}
+		const result = await getChirps(orderBy)
 		if (!result) {
 			throw new NotFoundError("Chirps Not Found")
 		}

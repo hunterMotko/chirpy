@@ -1,12 +1,12 @@
 import { db } from '../index.js'
 import { chirps, NewChirp } from '../schema.js';
-import { asc, eq } from 'drizzle-orm';
+import { desc, asc, eq } from 'drizzle-orm';
 
-export async function getChirps() {
+export async function getChirps(orderBy: string) {
 	let result = await db
 		.select()
 		.from(chirps)
-		.orderBy(asc(chirps.createdAt))
+		.orderBy(orderBy === "desc" ? desc(chirps.createdAt) : asc(chirps.createdAt))
 
 	return result
 }
