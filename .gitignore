@@ -4,3 +4,8 @@ node_modules
 dist
 *.log
 *.DS_Store
+
+go/out*
+go/.env
+go/.env*
+go/tesh.sh
