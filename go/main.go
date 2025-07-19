@@ -27,7 +27,7 @@ func main() {
 	dbQueries := database.New(db)
 	cfg := apiCfg.Cfg{
 		FileserverHits: atomic.Int32{},
-		DbQueries:      dbQueries,
+		DB:             dbQueries,
 	}
 
 	mux := http.NewServeMux()
@@ -41,6 +41,10 @@ func main() {
 	mux.HandleFunc("POST /admin/reset", cfg.HandlerReset)
 
 	mux.HandleFunc("POST /api/users", cfg.CreateUser)
+
+	mux.HandleFunc("POST /api/chirps", cfg.CreateChirp)
+	mux.HandleFunc("GET /api/chirps", cfg.GetChirps)
+	mux.HandleFunc("GET /api/chirps/{chirpID}", cfg.GetChirpByID)
 
 	mux.HandleFunc("POST /api/validate_chirp", handler.ValidateChirp)
 	mux.HandleFunc("GET /api/healthz", handler.CheckHealthz)

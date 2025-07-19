@@ -8,4 +8,4 @@ dist
 go/out*
 go/.env
 go/.env*
-go/tesh.sh
+*.sh
