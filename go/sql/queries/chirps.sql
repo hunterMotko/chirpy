@@ -9,10 +9,17 @@ VALUES (
 )
 RETURNING *;
 
--- name: GetChirps :many
+-- name: GetChirpsByAuthorOrAll :many
 SELECT * FROM chirps
-ORDER BY created_at ASC;
+WHERE (user_id = sqlc.narg(user_id) OR sqlc.narg(user_id) IS NULL)
+ORDER BY
+    CASE WHEN sqlc.narg(sort_order) = 'DESC' THEN created_at END DESC,
+    CASE WHEN sqlc.narg(sort_order) IS NULL OR sqlc.narg(sort_order) = 'ASC' THEN created_at END ASC;
 
 -- name: GetChirpById :one
 SELECT * FROM chirps
 WHERE id = $1;
+
+-- name: DeleteChirpById :exec
+DELETE FROM chirps
+	WHERE id = $1;

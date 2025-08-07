@@ -41,6 +41,16 @@ func (q *Queries) CreateChirp(ctx context.Context, arg CreateChirpParams) (Chirp
 	return i, err
 }
 
+const deleteChirpById = `-- name: DeleteChirpById :exec
+DELETE FROM chirps
+	WHERE id = $1
+`
+
+func (q *Queries) DeleteChirpById(ctx context.Context, id uuid.UUID) error {
+	_, err := q.db.ExecContext(ctx, deleteChirpById, id)
+	return err
+}
+
 const getChirpById = `-- name: GetChirpById :one
 SELECT id, created_at, updated_at, body, user_id FROM chirps
 WHERE id = $1
@@ -59,13 +69,21 @@ func (q *Queries) GetChirpById(ctx context.Context, id uuid.UUID) (Chirp, error)
 	return i, err
 }
 
-const getChirps = `-- name: GetChirps :many
+const getChirpsByAuthorOrAll = `-- name: GetChirpsByAuthorOrAll :many
 SELECT id, created_at, updated_at, body, user_id FROM chirps
-ORDER BY created_at ASC
+WHERE (user_id = $1 OR $1 IS NULL)
+ORDER BY
+    CASE WHEN $2 = 'DESC' THEN created_at END DESC,
+    CASE WHEN $2 IS NULL OR $2 = 'ASC' THEN created_at END ASC
 `
 
-func (q *Queries) GetChirps(ctx context.Context) ([]Chirp, error) {
-	rows, err := q.db.QueryContext(ctx, getChirps)
+type GetChirpsByAuthorOrAllParams struct {
+	UserID    uuid.NullUUID `json:"user_id"`
+	SortOrder interface{}   `json:"sort_order"`
+}
+
+func (q *Queries) GetChirpsByAuthorOrAll(ctx context.Context, arg GetChirpsByAuthorOrAllParams) ([]Chirp, error) {
+	rows, err := q.db.QueryContext(ctx, getChirpsByAuthorOrAll, arg.UserID, arg.SortOrder)
 	if err != nil {
 		return nil, err
 	}
